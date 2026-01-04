@@ -43,11 +43,13 @@ func getPallete() (lipgloss.Color, lipgloss.Color, lipgloss.Color, lipgloss.Colo
 	return subtle, accent, highlight, weekend
 }
 
-func getStyles() (lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style) {
+func getStyles() (lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style) {
 	subtle, accent, highlight, weekend := getPallete()
 	titleStyle := lipgloss.NewStyle().
 		Bold(true).
 		Foreground(highlight)
+
+	footerStyle := lipgloss.NewStyle()
 
 	cellStyle := lipgloss.NewStyle().
 		Width(4). // Increased width for breathing room
@@ -69,5 +71,5 @@ func getStyles() (lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style
 		Background(accent).
 		Bold(true)
 
-	return titleStyle, headerStyle, weekNumStyle, weekdayStyle, weekendStyle, todayStyle
+	return titleStyle, headerStyle, footerStyle, weekNumStyle, weekdayStyle, weekendStyle, todayStyle
 }

@@ -13,7 +13,10 @@ func (c calendarPage) View() string {
 }
 
 func buildCal(c calendarPage) string {
-	titleStyle, headerStyle, weekNumStyle, weekdayStyle, weekendStyle, todayStyle := getStyles()
+	titleStyle, headerStyle,
+		footerStyle, weekNumStyle,
+		weekdayStyle, weekendStyle,
+		todayStyle := getStyles()
 
 	firstWeekDay, week, lastDay := getMonthInfo(c.selMonth, c.selYear)
 
@@ -55,6 +58,23 @@ func buildCal(c calendarPage) string {
 		currWeekDay++
 	}
 
-	title := titleStyle.MarginLeft(1).Render(fmt.Sprintf("%s %d", c.selMonth, c.selYear))
-	return lipgloss.JoinVertical(lipgloss.Left, title, cal.String())
+	calStr := cal.String()
+	calWidth := lipgloss.Width(calStr)
+
+	title := titleStyle.
+		Width(calWidth).
+		Align(lipgloss.Center).
+		Render(fmt.Sprintf("%s %d", c.selMonth, c.selYear))
+
+	footer := footerStyle.
+		Width(calWidth).
+		Align(lipgloss.Center).
+		Render("\n⇄ month  ⇅ year  ↵ reset")
+
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
+		title,
+		calStr,
+		footer,
+	)
 }
