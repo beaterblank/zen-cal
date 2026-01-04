@@ -42,7 +42,7 @@ func (c calendarPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "q":
+		case "ctrl+c", "q", "esc":
 			return c, tea.Quit
 
 		case "j": // increase year
@@ -91,8 +91,7 @@ func buildCal(c calendarPage) string {
 	subtle := lipgloss.Color("241")    // Dim gray
 	accent := lipgloss.Color("63")     // Soft slate blue
 	highlight := lipgloss.Color("231") // Near white
-	// bg := lipgloss.Color("235")        // Dark gray background
-	weekend := lipgloss.Color("210") // Soft salmon/muted red
+	weekend := lipgloss.Color("210")   // Soft salmon/muted red
 
 	// --- Styles ---
 	titleStyle := lipgloss.NewStyle().
