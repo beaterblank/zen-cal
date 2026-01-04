@@ -25,10 +25,10 @@
 
 ## Installation
 ```bash
-git clone https://github.com/yourusername/terminal-calendar.git
-cd terminal-calendar
+git clone https://github.com/beaterblank/zen-cal/edit/master/Readme.md
+cd zen-cal
 go mod tidy
-go run .
+go build 
 ```
 
 ## Dependencies
