@@ -25,7 +25,7 @@
 
 ## Installation
 ```bash
-git clone https://github.com/beaterblank/zen-cal/edit/master/Readme.md
+git clone https://github.com/beaterblank/zen-cal.git
 cd zen-cal
 go mod tidy
 go build 
