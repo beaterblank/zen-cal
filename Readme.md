@@ -5,7 +5,7 @@
 [Lip Gloss](https://github.com/charmbracelet/lipgloss).
 
 - Terminal UI calendar with navigation months and years with vim-style keys
-[!screenshot](assests/screenshot.png)
+![screenshot](assests/screenshot.png)
 ## Controls
 
 | Key            | Action         |
