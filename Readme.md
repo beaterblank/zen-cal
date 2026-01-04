@@ -1,4 +1,4 @@
-# Zen-Cal (Go + Bubble Tea)
+# Zen-Cal
 
 - A minimal, interactive terminal-based calendar built in **Go** using
 [Bubble Tea](https://github.com/charmbracelet/bubbletea) and
