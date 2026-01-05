@@ -2,7 +2,10 @@
 
 A minimal, interactive terminal-based calendar built in **Go**, with month and year navigation using vim-style or arrow keys.
 
-<img src="assets/screenshot.png" alt="zen-cal" />
+<div style="display: flex; gap: 12px;">
+  <img src="assets/screenshot-dark.png" alt="zen-cal dark" style="width: 50%;" />
+  <img src="assets/screenshot-light.png" alt="zen-cal light" style="width: 50%;" />
+</div>
 
 
 ## Configuration
