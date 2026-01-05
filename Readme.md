@@ -7,7 +7,7 @@ A minimal, interactive terminal-based calendar built in **Go**, with month and y
 
 ## Configuration
 
-Zen-Cal can be customized to match your terminal theme. The following defaults work well with most dark themes:
+Zen-Cal can be customized to match your theme. The following defaults work well with most dark themes:
 
 ```toml
 primary   = #3f51b5  # Accent / highlight color
