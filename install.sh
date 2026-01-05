@@ -67,11 +67,13 @@ fi
 cp ./assets/zen-cal/zen-cal-light.conf "$ZEN_CONF_LIGHT"
 cp ./assets/zen-cal/zen-cal-dark.conf "$ZEN_CONF_DARK"
 
-
-go mod tidy
-go build -o zen-cal
-cp zen-cal "$BIN_DEST"
-rm zen-cal
+(
+  cd src
+  go mod tidy
+  go build -o zen-cal
+  cp zen-cal "$BIN_DEST"
+  rm zen-cal
+)
 
 if command -v omarchy-restart-waybar &> /dev/null; then
     omarchy-restart-waybar
