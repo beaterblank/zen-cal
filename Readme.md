@@ -54,7 +54,7 @@ chmod +x ./uninstall.sh ./purge.sh
 
 ## Notes
 
-* The installer modifies your Waybar configuration in-place, but creates a backup before making changes, backup your config.
+The installer updates your Waybar configuration directly but first creates a backup, make sure to keep a copy of your config in case recovery is needed.
 
 ## Dependencies
 
