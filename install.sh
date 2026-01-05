@@ -1,69 +1,75 @@
 #!/bin/bash
 set -euo pipefail
 
-# Use absolute path for consistency
-BIN_DEST="$HOME/.local/bin/zen-cal"
+BIN_DIR="$HOME/.local/bin"
+BIN_DEST="$BIN_DIR/zen-cal"
+
+HYPR_DIR="$HOME/.config/hypr"
+HYPR_APPS_DIR="$HYPR_DIR/apps"
+HYPR_APPS_CONF="$HYPR_DIR/apps.conf"
+HYPR_MAIN_CONF="$HYPR_DIR/hyprland.conf"
+HYPR_ZEN_CONF="$HYPR_APPS_DIR/zen-cal.conf"
+
+ZEN_DIR="$HOME/.config/zen-cal"
+ZEN_CONF="$ZEN_DIR/zen-cal.conf"
+
+WAYBAR_DIR="$HOME/.config/waybar"
+WAYBAR_CONFIG="$WAYBAR_DIR/config.jsonc"
+WAYBAR_BACKUP="$ZEN_DIR/config.jsonc.zen-cal.bak"
+
+TMP_WAYBAR_CLEAN="/tmp/waybar_clean.jsonc"
+TMP_WAYBAR_MERGED="/tmp/waybar_merged.jsonc"
 
 if [[ -e "$BIN_DEST" ]]; then
     echo "Error: $BIN_DEST already exists"
     exit 1
 fi
 
-# Create directories
-mkdir -p "$HOME/.config/hypr/apps"
-mkdir -p "$HOME/.config/zen-cal"
-mkdir -p "$HOME/.local/bin"
+mkdir -p "$BIN_DIR" "$HYPR_APPS_DIR" "$ZEN_DIR"
 
-# Create config files if they don't exist
-touch "$HOME/.config/hypr/apps.conf"
+touch "$HYPR_APPS_CONF"
 
-# Link apps.conf to zen-cal.conf
-if ! grep -Fq "source = $HOME/.config/hypr/apps/zen-cal.conf" "$HOME/.config/hypr/apps.conf"; then
-    echo "source = $HOME/.config/hypr/apps/zen-cal.conf" >> "$HOME/.config/hypr/apps.conf"
+if ! grep -Fq "source = $HYPR_ZEN_CONF" "$HYPR_APPS_CONF"; then
+    echo "source = $HYPR_ZEN_CONF" >> "$HYPR_APPS_CONF"
 fi
 
-# Add window rules for zen-cal
-cp ./assets/window-rule/zen-cal.conf "$HOME/.config/hypr/apps/"
+cp ./assets/window-rule/zen-cal.conf "$HYPR_APPS_DIR/"
 
-# Source apps.conf from hyprland.conf
-if ! grep -Fq "source = $HOME/.config/hypr/apps.conf" "$HOME/.config/hypr/hyprland.conf"; then
-    echo "source = $HOME/.config/hypr/apps.conf" >> "$HOME/.config/hypr/hyprland.conf"
+if ! grep -Fq "source = $HYPR_APPS_CONF" "$HYPR_MAIN_CONF"; then
+    echo "source = $HYPR_APPS_CONF" >> "$HYPR_MAIN_CONF"
 fi
 
-# Waybar Integration
-WAYBAR_CONFIG="$HOME/.config/waybar/config.jsonc"
 if [[ -f "$WAYBAR_CONFIG" ]]; then
-    cp "$WAYBAR_CONFIG" "$HOME/.config/zen-cal/config.jsonc.zen-cal.bak"
-    
-    # This strips comments and trailing commas for JQ processing
-    sed -E 's|//.*||g; s/,([[:space:]]*[\]}])/\1/g' "$WAYBAR_CONFIG" > /tmp/waybar_clean.jsonc
-    
-    # check to see if module is already in the list then merge
-    if ! jq -s '.[0] * .[1] | if (."modules-right" | contains(["custom/zen-cal"])) then . else .["modules-right"] += ["custom/zen-cal"] end' \
-      /tmp/waybar_clean.jsonc ./assets/waybar/waybar.json > /tmp/waybar_merged.jsonc; then
+    cp "$WAYBAR_CONFIG" "$WAYBAR_BACKUP"
+
+    sed -E 's|//.*||g; s/,([[:space:]]*[\]}])/\1/g' \
+        "$WAYBAR_CONFIG" > "$TMP_WAYBAR_CLEAN"
+
+    if ! jq -s '
+        .[0] * .[1]
+        | if (."modules-right" | contains(["custom/zen-cal"]))
+          then .
+          else .["modules-right"] += ["custom/zen-cal"]
+          end
+    ' "$TMP_WAYBAR_CLEAN" ./assets/waybar/waybar.json > "$TMP_WAYBAR_MERGED"; then
         echo "Error: Failed to merge waybar config"
-        rm -f /tmp/waybar_clean.jsonc /tmp/waybar_merged.jsonc
+        rm -f "$TMP_WAYBAR_CLEAN" "$TMP_WAYBAR_MERGED"
         exit 1
     fi
 
-    mv /tmp/waybar_merged.jsonc "$WAYBAR_CONFIG"
-    rm -f /tmp/waybar_clean.jsonc
+    mv "$TMP_WAYBAR_MERGED" "$WAYBAR_CONFIG"
+    rm -f "$TMP_WAYBAR_CLEAN"
 else
     echo "Warning: $WAYBAR_CONFIG not found, skipping waybar integration"
 fi
 
-# Copy zen-cal assets
-cp ./assets/zen-cal/zen-cal.conf "$HOME/.config/zen-cal/"
+cp ./assets/zen-cal/zen-cal.conf "$ZEN_CONF"
 
-# Build Go project
 go mod tidy
 go build -o zen-cal
-
-# Place it on path
 cp zen-cal "$BIN_DEST"
 rm zen-cal
 
-# Restart waybar
 if command -v omarchy-restart-waybar &> /dev/null; then
     omarchy-restart-waybar
 elif pgrep -x waybar > /dev/null; then
