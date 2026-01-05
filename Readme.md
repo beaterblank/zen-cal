@@ -1,12 +1,12 @@
 # Zen-Cal
-
-- A minimal, interactive terminal-based calendar built in **Go** using
+Terminal UI calendar with navigation of months and years with vim-style and arrow keys
+A minimal, interactive terminal-based calendar built in **Go** using
 [Bubble Tea](https://github.com/charmbracelet/bubbletea) and
 [Lip Gloss](https://github.com/charmbracelet/lipgloss).
 
-- Terminal UI calendar with navigation months and years with vim-style keys
-
-![screenshot](assets/screenshot.png)
+<p align="center">
+  <img src="assets/screenshot.png" alt="zen-cal" width="300"/>
+</p>
 
 ## Controls
 
