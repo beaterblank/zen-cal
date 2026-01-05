@@ -36,6 +36,7 @@ You can adjust these values to match your preferred color scheme in `~/.config/z
 * UTF-8 compatible terminal
 
 ## Installation
+> **Note:** The installer updates your Waybar configuration directly but first creates a backup to restore on uninstall, make sure to keep a copy of your config in case recovery is needed.
 
 ```bash
 git clone https://github.com/beaterblank/zen-cal.git
@@ -52,13 +53,12 @@ chmod +x ./uninstall.sh ./purge.sh
 # optionally, remove all files using purge.sh
 ```
 
-## Notes
 
-The installer updates your Waybar configuration directly but first creates a backup, make sure to keep a copy of your config in case recovery is needed.
 
 ## Dependencies
 
 * hyprland
 * Waybar
+* go lang
 * `github.com/charmbracelet/bubbletea`
 * `github.com/charmbracelet/lipgloss`
