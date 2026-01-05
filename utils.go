@@ -94,52 +94,44 @@ func getPalette() (primary, secondary, text, alert lipgloss.Color) {
 }
 
 func getStyles() calstyle {
-	primary, secondary,
-		text, alert := getPalette()
+	primary, secondary, text, alert := getPalette()
 
-	// Title / main headings
-	titleStyle := lipgloss.NewStyle().
-		Bold(true).
-		Foreground(text)
-
-	// Footer
-	footerStyle := lipgloss.NewStyle()
-
-	// Table cell base style
+	// Base cell style
 	cellBase := lipgloss.NewStyle().
 		Width(4).
 		Align(lipgloss.Center)
 
-	// Header / index / row numbers
-	headerStyle := cellBase.
-		Foreground(secondary).
-		Italic(true)
-
-	weekNumStyle := cellBase.
-		Foreground(lipgloss.Color("239")).
-		Italic(true)
-
-	// Weekday cells
-	weekdayStyle := cellBase.
-		Foreground(lipgloss.Color("250"))
-
-	// Weekend / alert cells
-	weekendStyle := cellBase.
-		Foreground(alert)
-
-	// Current day / active selection
-	todayStyle := cellBase.
-		Foreground(text).
-		Background(primary).
-		Bold(true)
-
 	return calstyle{
-		titleStyle:   titleStyle,
-		headerStyle:  headerStyle,
-		footerStyle:  footerStyle,
-		weekNumStyle: weekNumStyle,
-		weekdayStyle: weekdayStyle,
-		weekendStyle: weekendStyle,
-		todayStyle:   todayStyle,
+		// Title / main headings
+		titleStyle: lipgloss.NewStyle().
+			Bold(true).
+			Foreground(text),
+
+		// Footer
+		footerStyle: lipgloss.NewStyle().
+			Foreground(text),
+
+		// Header / index / row numbers
+		headerStyle: cellBase.
+			Foreground(secondary).
+			Italic(true),
+
+		weekNumStyle: cellBase.
+			Foreground(secondary).
+			Italic(true),
+
+		// Weekday cells
+		weekdayStyle: cellBase.
+			Foreground(text),
+
+		// Weekend / alert cells
+		weekendStyle: cellBase.
+			Foreground(alert),
+
+		// Current day / active selection
+		todayStyle: cellBase.
+			Foreground(text).
+			Background(primary).
+			Bold(true),
 	}
 }
