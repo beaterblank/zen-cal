@@ -21,6 +21,23 @@ alert     = #ff4081
 
 You can adjust these values to match your preferred color scheme in `~/.config/zen-cal/zen-cal.config`.
 
+`~/.config/hypr/app/zen-cal.conf` file defines the window rules; adjust them to position the calendar anywhere on the monitor.
+
+It should look like this:
+
+```
+windowrulev2 = float, class:^(TUI.zencal)$
+windowrulev2 = size 14% 18%, class:^(TUI.zencal)$
+windowrulev2 = move 86% 2.5%, class:^(TUI.zencal)$
+```
+
+* `move` controls the window’s position on the monitor.
+* `size` controls the window’s dimensions.
+
+By default, the module appears in the right-most corner. If you want it centered, update your Waybar configuration aswell:
+
+* Add `custom/zen-cal` to `modules-center`.
+* Remove `custom/zen-cal` from the `modules-right`.
 
 ## Controls
 
