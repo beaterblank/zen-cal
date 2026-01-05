@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -43,6 +45,24 @@ func newCalendarPage() calendarPage {
 	}
 }
 
+func IsDarkModeGTK() bool {
+	cmd := exec.Command(
+		"gsettings",
+		"get",
+		"org.gnome.desktop.interface",
+		"color-scheme",
+	)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	if err := cmd.Run(); err != nil {
+		return false
+	}
+
+	// 'prefer-dark' or 'default'
+	return strings.Contains(out.String(), "dark")
+}
+
 func getMonthInfo(month time.Month, year int) (time.Weekday, int, int) {
 	firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
 	firstWeekDay := firstDay.Weekday() // Sunday = 0
@@ -52,19 +72,25 @@ func getMonthInfo(month time.Month, year int) (time.Weekday, int, int) {
 	return firstWeekDay, week, lastDay
 }
 
-func getPalette() (primary, secondary, text, alert lipgloss.Color) {
-	primary = lipgloss.Color("63")    // Accent / highlight background
-	secondary = lipgloss.Color("241") // Subtle / dim text
-	text = lipgloss.Color("231")      // Main text / foreground
-	alert = lipgloss.Color("210")     // Special highlight (weekend / alert)
+func getPalette() (today, headings, text, weekends lipgloss.Color) {
+	today = lipgloss.Color("#f38ba8")    // Accent / highlight background
+	headings = lipgloss.Color("#cba6f7") // Subtle / dim text
+	text = lipgloss.Color("#cdd6f4")     // Main text / foreground
+	weekends = lipgloss.Color("#f9e2af") // Special highlight (weekend / weekends)
 	hexColor := regexp.MustCompile(`^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$`)
-	
+
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return // Return defaults if home directory cannot be determined
 	}
-	
-	configPath := filepath.Join(homeDir, ".config", "zen-cal", "zen-cal.conf")
+	// defaults to light mode
+	var confFileName string
+	if IsDarkModeGTK() {
+		confFileName = "zen-cal-dark.conf"
+	} else {
+		confFileName = "zen-cal-light.conf"
+	}
+	configPath := filepath.Join(homeDir, ".config", "zen-cal", confFileName)
 	file, err := os.Open(configPath)
 	if err != nil {
 		return // Return defaults if config file doesn't exist
@@ -88,28 +114,28 @@ func getPalette() (primary, secondary, text, alert lipgloss.Color) {
 			continue // skip invalid hex codes
 		}
 		switch key {
-		case "primary":
-			primary = lipgloss.Color(val)
-		case "secondary":
-			secondary = lipgloss.Color(val)
+		case "today":
+			today = lipgloss.Color(val)
+		case "headings":
+			headings = lipgloss.Color(val)
 		case "text":
 			text = lipgloss.Color(val)
-		case "alert":
-			alert = lipgloss.Color(val)
+		case "weekends":
+			weekends = lipgloss.Color(val)
 		}
 	}
-	
+
 	// Check for scanner errors
 	if err := scanner.Err(); err != nil {
 		// Return defaults if there was an error reading the file
 		return
 	}
-	
+
 	return
 }
 
 func getStyles() calstyle {
-	primary, secondary, text, alert := getPalette()
+	today, headings, text, weekends := getPalette()
 
 	// Base cell style
 	cellBase := lipgloss.NewStyle().
@@ -117,7 +143,7 @@ func getStyles() calstyle {
 		Align(lipgloss.Center)
 
 	return calstyle{
-		// Title / main headings
+		// text / main headings
 		titleStyle: lipgloss.NewStyle().
 			Bold(true).
 			Foreground(text),
@@ -128,25 +154,25 @@ func getStyles() calstyle {
 
 		// Header / index / row numbers
 		headerStyle: cellBase.
-			Foreground(secondary).
+			Foreground(headings).
 			Italic(true),
 
 		weekNumStyle: cellBase.
-			Foreground(secondary).
+			Foreground(headings).
 			Italic(true),
 
 		// Weekday cells
 		weekdayStyle: cellBase.
 			Foreground(text),
 
-		// Weekend / alert cells
+		// Weekend / weekends cells
 		weekendStyle: cellBase.
-			Foreground(alert),
+			Foreground(weekends),
 
 		// Current day / active selection
 		todayStyle: cellBase.
 			Foreground(text).
-			Background(primary).
+			Background(today).
 			Bold(true),
 	}
 }

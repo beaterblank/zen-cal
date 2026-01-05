@@ -21,4 +21,3 @@ elif command -v killall &> /dev/null && killall -0 waybar 2>/dev/null; then
     echo "Note: omarchy-restart-waybar not found. Please restart waybar manually if needed."
 fi
 
-echo "zen-cal uninstalled successfully."

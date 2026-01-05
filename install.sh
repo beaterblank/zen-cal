@@ -11,7 +11,8 @@ HYPR_MAIN_CONF="$HYPR_DIR/hyprland.conf"
 HYPR_ZEN_CONF="$HYPR_APPS_DIR/zen-cal.conf"
 
 ZEN_DIR="$HOME/.config/zen-cal"
-ZEN_CONF="$ZEN_DIR/zen-cal.conf"
+ZEN_CONF_LIGHT="$ZEN_DIR/zen-cal-light.conf"
+ZEN_CONF_DARK="$ZEN_DIR/zen-cal-dark.conf"
 
 WAYBAR_DIR="$HOME/.config/waybar"
 WAYBAR_CONFIG="$WAYBAR_DIR/config.jsonc"
@@ -63,7 +64,9 @@ else
     echo "Warning: $WAYBAR_CONFIG not found, skipping waybar integration"
 fi
 
-cp ./assets/zen-cal/zen-cal.conf "$ZEN_CONF"
+cp ./assets/zen-cal/zen-cal-light.conf "$ZEN_CONF_LIGHT"
+cp ./assets/zen-cal/zen-cal-dark.conf "$ZEN_CONF_DARK"
+
 
 go mod tidy
 go build -o zen-cal
