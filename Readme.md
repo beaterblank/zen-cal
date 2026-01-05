@@ -58,6 +58,7 @@ chmod +x ./uninstall.sh ./purge.sh
 
 ## Dependencies
 
-* Omarchy
+* hyprland
+* Waybar
 * `github.com/charmbracelet/bubbletea`
 * `github.com/charmbracelet/lipgloss`
