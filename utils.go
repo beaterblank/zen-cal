@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -57,9 +58,16 @@ func getPalette() (primary, secondary, text, alert lipgloss.Color) {
 	text = lipgloss.Color("231")      // Main text / foreground
 	alert = lipgloss.Color("210")     // Special highlight (weekend / alert)
 	hexColor := regexp.MustCompile(`^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$`)
-	file, err := os.Open(os.ExpandEnv("$Home/.config/zen-cal/zen-cal.conf"))
+	
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return
+		return // Return defaults if home directory cannot be determined
+	}
+	
+	configPath := filepath.Join(homeDir, ".config", "zen-cal", "zen-cal.conf")
+	file, err := os.Open(configPath)
+	if err != nil {
+		return // Return defaults if config file doesn't exist
 	}
 	defer file.Close()
 
@@ -90,6 +98,13 @@ func getPalette() (primary, secondary, text, alert lipgloss.Color) {
 			alert = lipgloss.Color(val)
 		}
 	}
+	
+	// Check for scanner errors
+	if err := scanner.Err(); err != nil {
+		// Return defaults if there was an error reading the file
+		return
+	}
+	
 	return
 }
 
