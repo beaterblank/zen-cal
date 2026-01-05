@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # Restore waybar config backup if it exists
-if [[ -f ~/.config/zen-cal/config.jsonc.zen-cal.bak ]]; then
-    mv ~/.config/zen-cal/config.jsonc.zen-cal.bak ~/.config/waybar/config.jsonc
+if [[ -f $HOME/.config/zen-cal/config.jsonc.zen-cal.bak ]]; then
+    mv $HOME/.config/zen-cal/config.jsonc.zen-cal.bak $HOME/.config/waybar/config.jsonc
 else
     echo "Warning: waybar config backup not found, skipping restore"
 fi
