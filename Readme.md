@@ -10,14 +10,14 @@
 
 ## Controls
 
-| Key            | Action         |
-| -------------- | -------------- |
-| `h`            | Previous month |
-| `l`            | Next month     |
-| `k`            | Previous year  |
-| `j`            | Next year      |
-| `r`            | Reset to today |
-| `q` / `Ctrl+C` | Quit           |
+| Key             | Action         |
+| ----------------| -------------- |
+| `h`, `←`            | Previous month |
+| `l`, `→`            | Next month     |
+| `k`, `↑`            | Previous year  |
+| `j`, `↓`            | Next year      |
+| `r`, `↵`            | Reset to today |
+| `q`, `Ctrl+C`, `esc`  | Quit           |
 
 ## Requirements
 * Go 1.20+
@@ -27,12 +27,19 @@
 ```bash
 git clone https://github.com/beaterblank/zen-cal.git
 cd zen-cal
-go mod tidy
-go build 
+chmod +x ./install.sh
+./install.sh
+```
+
+## Uninstallation
+```bash
+chmod +x ./uninstall.sh
+./uninstall.sh
+```
+```
 ```
 
 ## Dependencies
 
 * `github.com/charmbracelet/bubbletea`
 * `github.com/charmbracelet/lipgloss`
-* `github.com/charmbracelet/lipgloss/table`

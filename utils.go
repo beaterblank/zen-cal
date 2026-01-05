@@ -1,6 +1,10 @@
 package main
 
 import (
+	"bufio"
+	"os"
+	"regexp"
+	"strings"
 	"time"
 
 	lipgloss "github.com/charmbracelet/lipgloss"
@@ -13,6 +17,17 @@ type calendarPage struct {
 	currYear  int
 	selMonth  time.Month
 	selYear   int
+	styles    calstyle
+}
+
+type calstyle struct {
+	titleStyle   lipgloss.Style
+	headerStyle  lipgloss.Style
+	footerStyle  lipgloss.Style
+	weekNumStyle lipgloss.Style
+	weekdayStyle lipgloss.Style
+	weekendStyle lipgloss.Style
+	todayStyle   lipgloss.Style
 }
 
 func newCalendarPage() calendarPage {
@@ -23,6 +38,7 @@ func newCalendarPage() calendarPage {
 		currYear:  year,
 		selMonth:  month,
 		selYear:   year,
+		styles:    getStyles(),
 	}
 }
 
@@ -35,41 +51,95 @@ func getMonthInfo(month time.Month, year int) (time.Weekday, int, int) {
 	return firstWeekDay, week, lastDay
 }
 
-func getPallete() (lipgloss.Color, lipgloss.Color, lipgloss.Color, lipgloss.Color) {
-	subtle := lipgloss.Color("241")    // Dim gray
-	accent := lipgloss.Color("63")     // Soft slate blue
-	highlight := lipgloss.Color("231") // Near white
-	weekend := lipgloss.Color("210")   // Soft salmon/muted red
-	return subtle, accent, highlight, weekend
+func getPalette() (primary, secondary, text, alert lipgloss.Color) {
+	primary = lipgloss.Color("63")    // Accent / highlight background
+	secondary = lipgloss.Color("241") // Subtle / dim text
+	text = lipgloss.Color("231")      // Main text / foreground
+	alert = lipgloss.Color("210")     // Special highlight (weekend / alert)
+	hexColor := regexp.MustCompile(`^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$`)
+	file, err := os.Open(os.ExpandEnv("$Home/.config/zen-cal/zen-cal.conf"))
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		val := strings.TrimSpace(parts[1])
+
+		if !hexColor.MatchString(val) {
+			continue // skip invalid hex codes
+		}
+		switch key {
+		case "primary":
+			primary = lipgloss.Color(val)
+		case "secondary":
+			secondary = lipgloss.Color(val)
+		case "text":
+			text = lipgloss.Color(val)
+		case "alert":
+			alert = lipgloss.Color(val)
+		}
+	}
+	return
 }
 
-func getStyles() (lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style, lipgloss.Style) {
-	subtle, accent, highlight, weekend := getPallete()
+func getStyles() calstyle {
+	primary, secondary,
+		text, alert := getPalette()
+
+	// Title / main headings
 	titleStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(highlight)
+		Foreground(text)
 
+	// Footer
 	footerStyle := lipgloss.NewStyle()
 
-	cellStyle := lipgloss.NewStyle().
-		Width(4). // Increased width for breathing room
+	// Table cell base style
+	cellBase := lipgloss.NewStyle().
+		Width(4).
 		Align(lipgloss.Center)
 
-	headerStyle := cellStyle.
-		Foreground(subtle).
+	// Header / index / row numbers
+	headerStyle := cellBase.
+		Foreground(secondary).
 		Italic(true)
 
-	weekNumStyle := cellStyle.
+	weekNumStyle := cellBase.
 		Foreground(lipgloss.Color("239")).
 		Italic(true)
 
-	weekdayStyle := cellStyle.Foreground(lipgloss.Color("250"))
-	weekendStyle := cellStyle.Foreground(weekend)
+	// Weekday cells
+	weekdayStyle := cellBase.
+		Foreground(lipgloss.Color("250"))
 
-	todayStyle := cellStyle.
-		Foreground(highlight).
-		Background(accent).
+	// Weekend / alert cells
+	weekendStyle := cellBase.
+		Foreground(alert)
+
+	// Current day / active selection
+	todayStyle := cellBase.
+		Foreground(text).
+		Background(primary).
 		Bold(true)
 
-	return titleStyle, headerStyle, footerStyle, weekNumStyle, weekdayStyle, weekendStyle, todayStyle
+	return calstyle{
+		titleStyle:   titleStyle,
+		headerStyle:  headerStyle,
+		footerStyle:  footerStyle,
+		weekNumStyle: weekNumStyle,
+		weekdayStyle: weekdayStyle,
+		weekendStyle: weekendStyle,
+		todayStyle:   todayStyle,
+	}
 }
