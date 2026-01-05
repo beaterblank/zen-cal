@@ -23,6 +23,11 @@
 * Go 1.20+
 * Terminal with UTF-8 support
 
+## Note
+This tries to modify your waybar config in-place
+although it backs it up and restores it 
+back it up somewhere
+
 ## Installation
 ```bash
 git clone https://github.com/beaterblank/zen-cal.git
@@ -33,13 +38,15 @@ chmod +x ./install.sh
 
 ## Uninstallation
 ```bash
-chmod +x ./uninstall.sh
+chmod +x ./uninstall.sh ./purge.sh
 ./uninstall.sh
+# optionally just remove the files with purge.sh
 ```
 ```
 ```
+
 
 ## Dependencies
-
+* Omarchy
 * `github.com/charmbracelet/bubbletea`
 * `github.com/charmbracelet/lipgloss`

@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+if [[ -e "$HOME/.local/bin/zen-cal" ]]; then
+    echo "Error: ~/.local/bin/zen-cal already exists"
+    exit 1
+fi
+
 # Create directories
 mkdir -p ~/.config/hypr/apps
 mkdir -p ~/.config/zen-cal
@@ -15,34 +20,38 @@ if ! grep -q 'source = ~/.config/hypr/apps/zen-cal.conf' ~/.config/hypr/apps.con
 fi
 
 # Add window rules for zen-cal
-cat <<EOF > ~/.config/hypr/apps/zen-cal.conf
-windowrulev2 = float, class:^(TUI.zencal)\$
-windowrulev2 = size 14% 16%, class:^(TUI.zencal)\$
-windowrulev2 = move 44% 2%, class:^(TUI.zencal)\$
-EOF
+cp ./assets/window-rule/zen-cal.conf ~/.config/hypr/apps/
+
 
 # Source apps.conf from hyprland.conf
 if ! grep -q 'source = ~/.config/hypr/apps.conf' ~/.config/hypr/hyprland.conf; then
     echo "source = ~/.config/hypr/apps.conf" >> ~/.config/hypr/hyprland.conf
 fi
 
-# Add on-click action to waybar clock (removes any previously existing on-click)
-sed -i '/"clock"[[:space:]]*:[[:space:]]*{/,/^[[:space:]]*}/{
-  # Delete any existing on-click line inside the block
-  /^[[:space:]]*"on-click"[[:space:]]*:/d
-  # Insert the new on-click before the closing brace
-  /^[[:space:]]*}/i\    "on-click": "hyprctl clients | grep -q \\"initialClass: TUI.zencal\\" && hyprctl dispatch focuswindow \\"initialClass: TUI.zencal\\" || xdg-terminal-exec --app-id=TUI.zencal -e zen-cal",
-}' ~/.config/waybar/config.jsonc
+# Extend waybar
+cp ~/.config/waybar/config.jsonc ~/.config/zen-cal/config.jsonc.zen-cal.bak
+# Remove trailing commas into a temp file
+sed -E 's/,([[:space:]]*[\]}])/\1/g' ~/.config/waybar/config.jsonc > /tmp/waybar_clean.jsonc
+# Merge with waybar JSON into another temp file
+jq -s '.[0] * .[1] | .["modules-right"] = (.["modules-right"] // []) + ["custom/zen-cal"]' \
+  /tmp/waybar_clean.jsonc ./assets/waybar/waybar.json > /tmp/waybar_merged.jsonc
+# Move the merged result to the actual config
+mv /tmp/waybar_merged.jsonc ~/.config/waybar/config.jsonc
+# Clean up temp file
+rm /tmp/waybar_clean.jsonc
 
 # Copy zen-cal assets
-cp ./assets/zen-cal.conf ~/.config/zen-cal/
+cp ./assets/zen-cal/zen-cal.conf ~/.config/zen-cal/
 
 # Build Go project
 go mod tidy
 go build
 
 # place it on path
-mkdir -p ~/.local/bin
+mkdir -p ~/.local/bin/
 cp zen-cal ~/.local/bin/
+rm zen-cal
+
+omarchy-restart-waybar
 
 echo "installed successfully"

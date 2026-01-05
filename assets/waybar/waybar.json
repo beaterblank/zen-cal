@@ -1,0 +1,8 @@
+{
+  "custom/zen-cal": {
+    "exec": "date '+[%d]'",
+    "tooltip": "zen-cal",
+    "interval": 60,
+    "on-click": "hyprctl clients | grep -q \"initialClass: TUI.zencal\" && hyprctl dispatch focuswindow \"initialClass: TUI.zencal\" || xdg-terminal-exec --app-id=TUI.zencal -e ~/.local/bin/zen-cal"
+  }
+}
