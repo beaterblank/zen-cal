@@ -10,10 +10,10 @@ A minimal, interactive terminal-based calendar built in **Go**, with month and y
 Zen-Cal can be customized to match your theme. The following defaults work well with most dark themes:
 
 ```toml
-primary   = #3f51b5  # Accent / highlight color
-secondary = #f1f1f1  # Subtle / dim elements
-text      = #ffffff  # Main text color
-alert     = #ff4081  # Alerts / highlights
+primary   = #3f51b5  
+secondary = #f1f1f1 
+text      = #ffffff 
+alert     = #ff4081
 ```
 
 You can adjust these values to match your preferred color scheme in `~/.config/zen-cal/zen-cal.config`.
