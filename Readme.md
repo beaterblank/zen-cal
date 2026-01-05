@@ -60,5 +60,6 @@ chmod +x ./uninstall.sh ./purge.sh
 * hyprland
 * Waybar
 * go lang
+* jq (installation dependency)
 * `github.com/charmbracelet/bubbletea`
 * `github.com/charmbracelet/lipgloss`
