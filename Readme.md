@@ -4,9 +4,8 @@ A minimal, interactive terminal-based calendar built in **Go** using
 [Bubble Tea](https://github.com/charmbracelet/bubbletea) and
 [Lip Gloss](https://github.com/charmbracelet/lipgloss).
 
-<p align="center">
-  <img src="assets/screenshot.png" alt="zen-cal" />
-</p>
+
+<img src="assets/screenshot.png" alt="zen-cal" />
 
 ## Controls
 
