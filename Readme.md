@@ -5,7 +5,7 @@ A minimal, interactive terminal-based calendar built in **Go** using
 [Lip Gloss](https://github.com/charmbracelet/lipgloss).
 
 <p align="center">
-  <img src="assets/screenshot.png" alt="zen-cal" width="300"/>
+  <img src="assets/screenshot.png" alt="zen-cal" />
 </p>
 
 ## Controls
