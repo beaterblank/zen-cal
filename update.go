@@ -20,7 +20,7 @@ func (c calendarPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "k", "up": // decrease year
 			c.selYear--
 
-		case "l", "left": // increase month
+		case "l", "right": // increase month
 			if c.selMonth == time.December {
 				c.selMonth = time.January
 				c.selYear++
@@ -28,7 +28,7 @@ func (c calendarPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				c.selMonth++
 			}
 
-		case "h", "right": // decrease month
+		case "h", "left": // decrease month
 			if c.selMonth == time.January {
 				c.selMonth = time.December
 				c.selYear--
