@@ -13,13 +13,13 @@ A minimal, interactive terminal-based calendar built in **Go**, with month and y
 Zen-Cal can be customized to match your theme. The following defaults work well with most dark themes:
 
 ```toml
-primary   = #3f51b5  
-secondary = #f1f1f1 
-text      = #ffffff 
-alert     = #ff4081
+today    = #f38ba8
+headings = #cba6f7
+text     = #cdd6f4
+weekends = #f9e2af
 ```
 
-You can adjust these values to match your preferred color scheme in `~/.config/zen-cal/zen-cal.config`.
+You can adjust these values to match your preferred color scheme in `~/.config/zen-cal/zen-cal[ dark / light ].config`.
 
 `~/.config/hypr/app/zen-cal.conf` file defines the window rules; adjust them to position the calendar anywhere on the monitor.
 
