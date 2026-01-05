@@ -15,10 +15,14 @@ func (c calendarPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return c, tea.Quit
 
 		case "j", "down": // increase year
-			c.selYear++
+			if c.selYear < 9999 {
+				c.selYear++
+			}
 
 		case "k", "up": // decrease year
-			c.selYear--
+			if c.selYear > 1 {
+				c.selYear--
+			}
 
 		case "l", "right": // increase month
 			if c.selMonth == time.December {
