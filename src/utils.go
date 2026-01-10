@@ -52,8 +52,9 @@ func getMonthInfo(month time.Month, year int) (time.Weekday, int, int) {
 	return firstWeekDay, week, lastDay
 }
 
-func getPalette() (today, headings, text, weekends lipgloss.Color) {
+func getPalette() (today, today_text, headings, text, weekends lipgloss.Color) {
 	today = lipgloss.Color("#f38ba8")    // Accent / highlight background
+	today_text = lipgloss.Color("#cdd6f4")   // highlight text
 	headings = lipgloss.Color("#cba6f7") // Subtle / dim text
 	text = lipgloss.Color("#cdd6f4")     // Main text / foreground
 	weekends = lipgloss.Color("#f9e2af") // Special highlight (weekend / weekends)
@@ -90,6 +91,8 @@ func getPalette() (today, headings, text, weekends lipgloss.Color) {
 		switch key {
 		case "today":
 			today = lipgloss.Color(val)
+		case "today_text":
+			today_text = lipgloss.Color(val)
 		case "headings":
 			headings = lipgloss.Color(val)
 		case "text":
@@ -99,9 +102,7 @@ func getPalette() (today, headings, text, weekends lipgloss.Color) {
 		}
 	}
 
-	// Check for scanner errors
 	if err := scanner.Err(); err != nil {
-		// Return defaults if there was an error reading the file
 		return
 	}
 
@@ -109,7 +110,7 @@ func getPalette() (today, headings, text, weekends lipgloss.Color) {
 }
 
 func getStyles() calstyle {
-	today, headings, text, weekends := getPalette()
+	today, today_text, headings, text, weekends := getPalette()
 
 	// Base cell style
 	cellBase := lipgloss.NewStyle().
@@ -145,7 +146,7 @@ func getStyles() calstyle {
 
 		// Current day / active selection
 		todayStyle: cellBase.
-			Foreground(text).
+			Foreground(today_text).
 			Background(today).
 			Bold(true),
 	}
