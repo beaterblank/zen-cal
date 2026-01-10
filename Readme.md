@@ -6,7 +6,7 @@ A minimal, interactive terminal-based calendar built in **Go**, with month and y
   <img src="assets/screenshot.png" alt="zen-cal" style="width: 50%;" />
 </div>
 
-
+> Note : use [https://github.com/beaterblank/omarchy-theme-sync-ctl](https://github.com/beaterblank/omarchy-theme-sync-ctl) for dynamic theme change in omarchy.
 
 ## Installation
 > **Note:** The installer updates your Waybar configuration directly but first creates a backup to restore on uninstall, make sure to keep a copy of your config in case recovery is needed.
