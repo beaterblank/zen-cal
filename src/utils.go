@@ -45,24 +45,6 @@ func newCalendarPage() calendarPage {
 	}
 }
 
-func IsDarkModeGTK() bool {
-	cmd := exec.Command(
-		"gsettings",
-		"get",
-		"org.gnome.desktop.interface",
-		"color-scheme",
-	)
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	if err := cmd.Run(); err != nil {
-		return false
-	}
-
-	// 'prefer-dark' or 'default'
-	return strings.Contains(out.String(), "dark")
-}
-
 func getMonthInfo(month time.Month, year int) (time.Weekday, int, int) {
 	firstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
 	firstWeekDay := firstDay.Weekday() // Sunday = 0
@@ -83,13 +65,7 @@ func getPalette() (today, headings, text, weekends lipgloss.Color) {
 	if err != nil {
 		return // Return defaults if home directory cannot be determined
 	}
-	// defaults to light mode
-	var confFileName string
-	if IsDarkModeGTK() {
-		confFileName = "zen-cal-dark.conf"
-	} else {
-		confFileName = "zen-cal-light.conf"
-	}
+	confFileName := "zen-cal.conf"
 	configPath := filepath.Join(homeDir, ".config", "zen-cal", confFileName)
 	file, err := os.Open(configPath)
 	if err != nil {
