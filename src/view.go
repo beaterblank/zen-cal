@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"strings"
+	"os"
 
 	lipgloss "github.com/charmbracelet/lipgloss"
+	"golang.org/x/term"
 )
 
 // VIEW
@@ -73,10 +75,26 @@ func buildCal(c calendarPage) string {
 		Align(lipgloss.Center).
 		Render("⇄ month  ⇅ year  ↵ reset")
 
-	return lipgloss.JoinVertical(
+	fullCal := lipgloss.JoinVertical(
 		lipgloss.Left,
 		title,
+		"",
 		calStr,
+		"",
 		footer,
 	)
+	fd := int(os.Stdout.Fd())
+	// Center horizontally and vertically in terminal
+	termWidth, termHeight, err := term.GetSize(fd)
+	if err != nil {
+		return fullCal
+	} else {
+		return lipgloss.Place(
+			termWidth-1,
+			termHeight-1,
+			lipgloss.Center,
+			lipgloss.Center,
+			fullCal,
+		)
+	}
 }

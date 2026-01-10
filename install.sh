@@ -65,13 +65,13 @@ fi
 
 cp ./assets/zen-cal/zen-cal.conf "$ZEN_CONF"
 
-(
-  cd src
-  go mod tidy
-  go build -o zen-cal
-  cp zen-cal "$BIN_DEST"
-  rm zen-cal
-)
+# get latest version of zen-cal if it does not exist
+if [[ ! -f zen-cal ]]; then
+  curl -fL -o zen-cal https://github.com/beaterblank/zen-cal/releases/latest/download/zen-cal
+fi
+chmod +x zen-cal
+cp zen-cal "$BIN_DEST"
+rm zen-cal
 
 if command -v omarchy-restart-waybar &> /dev/null; then
     omarchy-restart-waybar
