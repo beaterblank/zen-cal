@@ -7,6 +7,51 @@ A minimal, interactive terminal-based calendar built in **Go**, with month and y
 </div>
 
 
+
+## Installation
+> **Note:** The installer updates your Waybar configuration directly but first creates a backup to restore on uninstall, make sure to keep a copy of your config in case recovery is needed.
+
+### setup
+```bash
+git clone https://github.com/beaterblank/zen-cal.git && cd zen-cal
+```
+Install `jq` if not already
+```bash
+sudo pacman -S jq
+```
+### Building
+optionally build if you'd like to :
+* `Go` is required to build
+```bash
+chmod +x ./build.sh
+./build.sh
+```
+### Installation
+gets the latest release if not built.
+```bash
+chmod +x ./install.sh
+./install.sh
+```
+
+## Controls
+
+| Key                  | Action         |
+| -------------------- | -------------- |
+| `h`, `←`             | Previous month |
+| `l`, `→`             | Next month     |
+| `k`, `↑`             | Previous year  |
+| `j`, `↓`             | Next year      |
+| `r`, `↵`             | Reset to today |
+| `q`, `Ctrl+C`, `esc` | Quit           |
+
+## Uninstallation
+
+```bash
+chmod +x ./uninstall.sh ./purge.sh
+./uninstall.sh
+# optionally only remove zen config files using purge.sh (if your waybar config backup is lost)
+```
+
 ## Configuration
 
 Zen-Cal can be customized to match your theme. The following defaults work well with most dark themes:
@@ -37,42 +82,6 @@ By default, the module appears in the right-most corner. If you want it centered
 
 * Add `custom/zen-cal` to `modules-center`.
 * Remove `custom/zen-cal` from the `modules-right`.
-
-## Controls
-
-| Key                  | Action         |
-| -------------------- | -------------- |
-| `h`, `←`             | Previous month |
-| `l`, `→`             | Next month     |
-| `k`, `↑`             | Previous year  |
-| `j`, `↓`             | Next year      |
-| `r`, `↵`             | Reset to today |
-| `q`, `Ctrl+C`, `esc` | Quit           |
-
-## Requirements
-
-* Go 1.20 or higher
-* UTF-8 compatible terminal
-
-## Installation
-> **Note:** The installer updates your Waybar configuration directly but first creates a backup to restore on uninstall, make sure to keep a copy of your config in case recovery is needed.
-
-```bash
-git clone https://github.com/beaterblank/zen-cal.git
-cd zen-cal
-chmod +x ./install.sh
-./install.sh
-```
-
-## Uninstallation
-
-```bash
-chmod +x ./uninstall.sh ./purge.sh
-./uninstall.sh
-# optionally, remove all files using purge.sh
-```
-
-
 
 ## Dependencies
 
