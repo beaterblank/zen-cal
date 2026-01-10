@@ -57,10 +57,11 @@ chmod +x ./uninstall.sh ./purge.sh
 Zen-Cal can be customized to match your theme. The following defaults work well with most dark themes:
 
 ```toml
-today    = #f38ba8
-headings = #cba6f7
-text     = #cdd6f4
-weekends = #f9e2af
+today      = #f38ba8
+today_text = #cdd6f4
+headings   = #cba6f7
+text       = #cdd6f4
+weekends   = #f9e2af
 ```
 
 You can adjust these values to match your preferred color scheme in `~/.config/zen-cal/zen-cal[ dark / light ].config`.
